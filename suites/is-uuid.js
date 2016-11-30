@@ -1,9 +1,10 @@
 /**
  * Last results: Nov-30-2016
  *
- * Regex x 143,364 ops/sec ±1.58% (83 runs sampled)
- * Array Membership x 63,020 ops/sec ±1.18% (86 runs sampled)
- * CharCode x 316,314 ops/sec ±1.44% (80 runs sampled)
+ * Regex x 143,241 ops/sec ±1.37% (82 runs sampled)
+ * Regex (no bail-out) x 112,344 ops/sec ±1.31% (80 runs sampled)
+ * Array Membership x 63,391 ops/sec ±1.08% (84 runs sampled)
+ * CharCode x 308,961 ops/sec ±1.41% (82 runs sampled)
  */
 const Benchmark = require('benchmark');
 const suite = new Benchmark.Suite;
@@ -32,6 +33,10 @@ function isUUIDRegex (str) {
   if (str.length !== 36) {
     return false;
   }
+  return UUID_REGEX.test(str);
+}
+
+function isUUIDRegexNoBailOut (str) {
   return UUID_REGEX.test(str);
 }
 
@@ -87,6 +92,10 @@ function testUUIDs (fn) {
 
 suite.add('Regex', () => {
   testUUIDs(isUUIDRegex);
+});
+
+suite.add('Regex (no bail-out)', () => {
+  testUUIDs(isUUIDRegexNoBailOut);
 });
 
 suite.add('Array Membership', () => {
